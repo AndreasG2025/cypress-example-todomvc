@@ -1,7 +1,7 @@
 describe('Navigation Links Test', () => {
     it('should check all navigation links', () => {
       // Besuche die Startseite der Website
-      cy.visit('https://coffee-cart.netlify.app/');
+      cy.visit('https://de.cwcloudpartner.com/de-release/webapps/#login');
   
       // Finde alle Navigationslinks
       cy.get('nav a').each(($link) => {
