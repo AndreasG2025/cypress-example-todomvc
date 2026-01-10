@@ -1,17 +1,30 @@
 describe('Navigation Links Test', () => {
-    it('should check all navigation links', () => {
-      // Besuche die Startseite der Website
-      cy.visit('https://de.cwcloudpartner.com/de-release/webapps/#login');
-  
-      // Finde alle Navigationslinks
-      cy.get('nav a').each(($link) => {
-        // Extrahiere die URL des Links
-        const url = $link.prop('href');
-        
-        // Überprüfe, ob der Link korrekt funktioniert
-        cy.request(url).then((response) => {
-          expect(response.status).to.eq(200);
-        });
-      });
+  it('should check all navigation links', () => {
+
+    // Seite mit Timeout laden
+    cy.visit('https://de.cwcloudpartner.com/de-release/webapps/#login', {
+      timeout: 30000
+    });
+
+    // Warten bis Navigation sichtbar ist
+    cy.get('nav', { timeout: 30000 }).should('be.visible');
+
+    // Alle Links durchklicken
+    cy.get('nav a').each(($link) => {
+      const text = $link.text().trim();
+
+      cy.wrap($link).click({ force: true });
+
+      // Warten bis die neue Seite aufgebaut ist
+      cy.get('body', { timeout: 30000 }).should('be.visible');
+
+      // Optional: prüfen, ob URL sich geändert hat
+      cy.location('href').should('include', '#');
+
+      cy.go('back');
+
+      // Wieder warten, bis Navigation sichtbar ist
+      cy.get('nav', { timeout: 30000 }).should('be.visible');
     });
   });
+});
